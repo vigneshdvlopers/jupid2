@@ -1,19 +1,12 @@
 import os
 from datetime import datetime
 from dotenv import load_dotenv
-from google import genai
-from google.genai import types
+import google.generativeai as genai
 
 load_dotenv()
-
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 class ChatbotService:
-    def _get_client(self):
-        api_key = os.getenv("GEMINI_API_KEY")
-        if not api_key:
-            return None
-        return genai.Client(api_key=api_key)
-
     def _system_instruction(self) -> str:
         today = datetime.now().strftime("%A, %d %B %Y")
         return (
@@ -24,21 +17,18 @@ class ChatbotService:
         )
 
     async def get_response(self, message: str) -> str:
-        client = self._get_client()
-        if not client:
+        if not os.getenv("GEMINI_API_KEY"):
             return (
                 "Error: GEMINI_API_KEY is not set in the backend .env file. "
                 "Please add your Gemini API key to use the chatbot."
             )
 
         try:
-            response = client.models.generate_content(
-                model="gemini-2.0-flash",
-                contents=message,
-                config=types.GenerateContentConfig(
-                    system_instruction=self._system_instruction(),
-                ),
+            model = genai.GenerativeModel(
+                model_name="gemini-1.5-flash",
+                system_instruction=self._system_instruction()
             )
+            response = model.generate_content(message)
             text = response.text
             if text:
                 return text
