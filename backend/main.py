@@ -1,0 +1,45 @@
+import os
+import logging
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
+
+# Setup logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+load_dotenv()
+logger.info(f"MAIN DEBUG: GOOGLE_CLIENT_ID length: {len(os.getenv('GOOGLE_CLIENT_ID', ''))}")
+
+from app.routers import auth, competitors, messages, clients, notifications, reports, chat
+from app.services.scheduler import setup_scheduler
+from starlette.middleware.sessions import SessionMiddleware
+
+app = FastAPI(title="Jupid AI Backend")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.add_middleware(SessionMiddleware, secret_key=os.getenv("SECRET_KEY", "s3cr3tk3y"))
+
+app.include_router(auth.router)
+app.include_router(competitors.router)
+app.include_router(messages.router)
+app.include_router(clients.router)
+app.include_router(notifications.router)
+app.include_router(reports.router)
+app.include_router(chat.router)
+
+
+@app.get("/")
+async def root():
+    return {"status": "success", "message": "Jupid AI Backend is working successfully 🚀"}
+
+@app.on_event("startup")
+async def startup_event():
+    setup_scheduler()
