@@ -27,7 +27,7 @@ export default function LandingPage() {
   ];
 
   const handleLogin = () => {
-    window.location.href = (process.env.NEXT_PUBLIC_API_URL || 'https://jupid2.onrender.com') + '/auth/google';
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
   };
 
   return (
