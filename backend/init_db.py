@@ -1,3 +1,4 @@
+from importlib.metadata import metadata
 import asyncio
 import os
 import sys

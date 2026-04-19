@@ -8,10 +8,14 @@ import { SkeletonTable } from '@/components/ui/Skeleton';
 
 export default function ReportsPage() {
   return (
-    <MainLayout title="Reports">
-      <Suspense fallback={<Card><SkeletonTable rows={8} /></Card>}>
+    <Suspense fallback={
+      <MainLayout title="Reports">
+        <Card><SkeletonTable rows={8} /></Card>
+      </MainLayout>
+    }>
+      <MainLayout title="Reports">
         <ReportsContent />
-      </Suspense>
-    </MainLayout>
+      </MainLayout>
+    </Suspense>
   );
 }

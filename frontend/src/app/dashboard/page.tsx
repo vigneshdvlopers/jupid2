@@ -7,17 +7,19 @@ import { SkeletonCard } from '@/components/ui/Skeleton';
 
 export default function DashboardPage() {
   return (
-    <MainLayout title="Dashboard">
-      <Suspense fallback={
+    <Suspense fallback={
+      <MainLayout title="Dashboard">
         <div className="space-y-8">
           <div className="h-24 w-full bg-surface2 rounded-2xl animate-pulse" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[1, 2, 3, 4].map(i => <SkeletonCard key={i} />)}
           </div>
         </div>
-      }>
+      </MainLayout>
+    }>
+      <MainLayout title="Dashboard">
         <DashboardContent />
-      </Suspense>
-    </MainLayout>
+      </MainLayout>
+    </Suspense>
   );
 }
