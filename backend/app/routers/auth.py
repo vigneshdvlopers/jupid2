@@ -26,7 +26,7 @@ ALGORITHM = os.getenv("ALGORITHM", "HS256")
 
 print(f"DEBUG: GOOGLE_CLIENT_ID: '{GOOGLE_CLIENT_ID}'")
 print(f"DEBUG: GOOGLE_CLIENT_SECRET: '{GOOGLE_CLIENT_SECRET[:5]}...'")
-print(f"DEBUG: GOOGLE_REDIRECT_URI: '{os.getenv('GOOGLE_REDIRECT_URI')}'")
+print(f"STARTUP REDIRECT URI: '{os.getenv('GOOGLE_REDIRECT_URI')}'")
 
 config = Config(environ=os.environ)
 oauth = OAuth(config)
@@ -73,6 +73,7 @@ async def get_current_admin(current_user: User = Depends(get_current_user)):
 @router.get("/google")
 async def login_google(request: Request):
     redirect_uri = os.getenv("GOOGLE_REDIRECT_URI")
+    print(f"REDIRECT URI: {redirect_uri}")
     return await oauth.google.authorize_redirect(request, redirect_uri)
 
 @router.get("/google/callback")
