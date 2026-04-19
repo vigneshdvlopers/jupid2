@@ -72,7 +72,7 @@ async def get_current_admin(current_user: User = Depends(get_current_user)):
 
 @router.get("/google")
 async def login_google(request: Request):
-    redirect_uri = os.getenv("GOOGLE_REDIRECT_URI", "http://localhost:8000/auth/google/callback")
+    redirect_uri = os.getenv("GOOGLE_REDIRECT_URI", "https://jupid2.onrender.com/auth/google/callback")
     return await oauth.google.authorize_redirect(request, redirect_uri)
 
 @router.get("/google/callback")
@@ -113,7 +113,7 @@ async def auth_google_callback(request: Request, db: AsyncSession = Depends(get_
         jwt_token = create_access_token(data={"sub": str(user.id)})
         
         # Redirect to frontend with token
-        frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
+        frontend_url = os.getenv("FRONTEND_URL", "https://jupid2-mk5oty9m2-shelkevignesh1234-2587s-projects.vercel.app")
         return RedirectResponse(url=f"{frontend_url}/dashboard?token={jwt_token}")
     except Exception as e:
         print(f"DB ERROR DURING AUTH: {str(e)}")

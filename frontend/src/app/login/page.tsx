@@ -9,7 +9,7 @@ import Link from 'next/link';
 
 export default function LoginPage() {
   const handleLogin = () => {
-    window.location.href = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000') + '/auth/google';
+    window.location.href = (process.env.NEXT_PUBLIC_API_URL || 'https://jupid2.onrender.com') + '/auth/google';
   };
 
   return (
