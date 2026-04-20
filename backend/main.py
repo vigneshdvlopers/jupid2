@@ -15,7 +15,12 @@ from app.routers import auth, competitors, messages, clients, notifications, rep
 from app.services.scheduler import setup_scheduler
 from starlette.middleware.sessions import SessionMiddleware
 
+from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
+
 app = FastAPI(title="Jupid AI Backend")
+
+# Add ProxyHeadersMiddleware to handle HTTPS correctly behind Render proxy
+app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
 
 app.add_middleware(
     CORSMiddleware,
@@ -28,7 +33,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.add_middleware(SessionMiddleware, secret_key=os.getenv("SECRET_KEY", "s3cr3tk3y"))
+app.add_middleware(
+    SessionMiddleware, 
+    secret_key=os.getenv("SECRET_KEY", "s3cr3tk3y"),
+    session_cookie="jupid_session",
+    same_site="lax",
+    https_only=True
+)
 
 app.include_router(auth.router)
 app.include_router(competitors.router)
