@@ -32,13 +32,12 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     { label: 'Chat AI', href: '/chat', icon: Bot },
     { label: 'Notifications', href: '/notifications', icon: Bell },
     { label: 'Messages', href: '/messages', icon: MessageSquare },
-    { label: 'Settings', href: '/settings', icon: Settings },
   ];
 
 
   const handleLogout = () => {
     removeToken();
-    router.push('/login');
+    router.push('/');
   };
 
   return (

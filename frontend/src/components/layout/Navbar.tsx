@@ -233,14 +233,6 @@ export default function Navbar({ title, onMenuClick }: NavbarProps) {
                       </div>
 
                       <div className="space-y-2">
-                        <Link 
-                          href="/settings"
-                          onClick={() => setShowUserDropdown(false)}
-                          className="flex items-center gap-3 w-full p-2.5 rounded-xl text-text-secondary hover:text-text-primary hover:bg-surface2 transition-all group"
-                        >
-                          <Settings size={16} className="group-hover:rotate-45 transition-transform" />
-                          <span className="text-xs font-bold">Account Settings</span>
-                        </Link>
                         <button 
                           onClick={handleLogout}
                           className="flex items-center gap-3 w-full p-2.5 rounded-xl text-text-muted hover:text-danger hover:bg-danger/5 transition-all group"
