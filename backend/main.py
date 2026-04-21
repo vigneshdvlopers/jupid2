@@ -26,7 +26,9 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://jupid2-mk5oty9m2-shelkevignesh1234-2587s-projects.vercel.app",
-        "https://jupid2-mk5oty9m2-shelkevignesh1234-2587s-projects.vercel.app/"
+        "https://jupid2-mk5oty9m2-shelkevignesh1234-2587s-projects.vercel.app/",
+        "http://localhost:3000",
+        "http://localhost:3000/"
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -38,7 +40,7 @@ app.add_middleware(
     secret_key=os.getenv("SECRET_KEY", "s3cr3tk3y"),
     session_cookie="jupid_session",
     same_site="lax",
-    https_only=True
+    https_only=False if "localhost" in os.getenv("GOOGLE_REDIRECT_URI", "") else True
 )
 
 app.include_router(auth.router)
