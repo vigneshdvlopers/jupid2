@@ -73,6 +73,7 @@ async def get_current_admin(current_user: User = Depends(get_current_user)):
 @router.get("/google")
 async def login_google(request: Request):
     redirect_uri = os.getenv("GOOGLE_REDIRECT_URI")
+    print(f"DEBUG: Using Client ID: {GOOGLE_CLIENT_ID[:10]}...")
     print(f"REDIRECT URI: {redirect_uri}")
     return await oauth.google.authorize_redirect(request, redirect_uri)
 
