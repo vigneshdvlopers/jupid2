@@ -6,10 +6,13 @@ import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
+  const router = useRouter();
+
   const handleLogin = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
+    router.push('/dashboard');
   };
 
   return (

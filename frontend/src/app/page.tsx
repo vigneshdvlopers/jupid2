@@ -3,6 +3,7 @@
 export const dynamic = "force-dynamic";
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Sparkles, BarChart3, BellRing, FileSearch, ArrowRight } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
@@ -26,8 +27,10 @@ export default function LandingPage() {
     },
   ];
 
+  const router = useRouter();
+
   const handleLogin = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
+    router.push('/dashboard');
   };
 
   return (

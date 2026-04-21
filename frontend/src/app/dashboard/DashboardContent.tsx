@@ -48,10 +48,12 @@ export default function DashboardContent() {
       return;
     }
 
+    /* 
     if (!isLoggedIn()) {
       router.push('/login');
       return;
     }
+    */
 
     fetchDashboardData();
   }, []);
