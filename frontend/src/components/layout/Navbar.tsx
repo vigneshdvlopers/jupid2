@@ -90,7 +90,7 @@ export default function Navbar({ title, onMenuClick }: NavbarProps) {
 
   const handleLogout = () => {
     removeToken();
-    router.push('/login');
+    router.push('/');
   };
 
   return (

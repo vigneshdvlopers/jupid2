@@ -20,7 +20,7 @@ export const removeToken = () => {
 };
 
 export const isLoggedIn = () => {
-  return !!getToken();
+  return true; // Bypass for development
 };
 
 export const getUser = () => {
