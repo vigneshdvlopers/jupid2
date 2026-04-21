@@ -20,18 +20,17 @@ export function middleware(request: NextRequest) {
     pathname.startsWith(route)
   );
 
-  // If it's a protected route and no token in cookie, 
-  // check if there's a token in the query params (from auth callback)
+  /* 
   if (isProtectedRoute && !token && !tokenFromQuery) {
     const url = new URL('/login', request.url);
     return NextResponse.redirect(url);
   }
 
-  // Redirect from login if already logged in
   if (pathname === '/login' && (token || tokenFromQuery)) {
     const url = new URL('/dashboard', request.url);
     return NextResponse.redirect(url);
   }
+  */
 
   return NextResponse.next();
 }
