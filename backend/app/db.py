@@ -5,11 +5,18 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DATABASE_URL = os.environ.get("DATABASE_URL", "postgres+asyncpg://jupid_user:Fj2T0aYUq3Jh3L8s1RxoW8ayLS0SbTSt@dpg-d7iu2oflk1mc73a55o60-a/jupid")
+DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql+asyncpg://jupid_user:Fj2T0aYUq3Jh3L8s1RxoW8ayLS0SbTSt@dpg-d7iu2oflk1mc73a55o60-a/jupid")
 
-# Fix common typo in connection string
-if DATABASE_URL and DATABASE_URL.startswith("postgresq"):
-    DATABASE_URL = DATABASE_URL.replace("postgresq", "postgresql", 1)
+# Robust fix for SQLAlchemy 2.0+ async dialects
+if DATABASE_URL:
+    if DATABASE_URL.startswith("postgresq+asyncpg://"):
+        DATABASE_URL = DATABASE_URL.replace("postgresq+asyncpg://", "postgresql+asyncpg://", 1)
+    elif DATABASE_URL.startswith("postgres+asyncpg://"):
+        DATABASE_URL = DATABASE_URL.replace("postgres+asyncpg://", "postgresql+asyncpg://", 1)
+    elif DATABASE_URL.startswith("postgres://"):
+        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+asyncpg://", 1)
+    elif DATABASE_URL.startswith("postgresql://"):
+        DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
 
 engine = create_async_engine(DATABASE_URL, echo=False)
 AsyncSessionLocal = sessionmaker(
