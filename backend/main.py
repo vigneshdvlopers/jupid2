@@ -22,13 +22,16 @@ app = FastAPI(title="Jupid AI Backend")
 # Add ProxyHeadersMiddleware to handle HTTPS correctly behind Render proxy
 app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
 
+frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        frontend_url,
+        f"{frontend_url}/",
         "https://jupid2-mk5oty9m2-shelkevignesh1234-2587s-projects.vercel.app",
-        "https://jupid2-mk5oty9m2-shelkevignesh1234-2587s-projects.vercel.app/",
+        "https://jupid2.vercel.app",
         "http://localhost:3000",
-        "http://localhost:3000/"
+        "http://localhost:3000/",
     ],
     allow_credentials=True,
     allow_methods=["*"],
