@@ -3,7 +3,10 @@ from datetime import datetime
 from dotenv import load_dotenv
 import google.generativeai as genai
 
-load_dotenv()
+# Explicitly load .env from the root of the backend directory
+env_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), '.env')
+load_dotenv(dotenv_path=env_path)
+
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 class ChatbotService:
@@ -28,10 +31,24 @@ class ChatbotService:
                 model_name="gemini-1.5-flash",
                 system_instruction=self._system_instruction()
             )
-            response = model.generate_content(message)
-            text = response.text
-            if text:
-                return text
+            # Use the async version of generate_content
+            response = await model.generate_content_async(message)
+            
+            # Check if the response was blocked
+            if response.candidates and response.candidates[0].finish_reason == 3: # SAFETY
+                return "I'm sorry, I cannot respond to that query as it was flagged by safety filters."
+
+            try:
+                text = response.text
+                if text:
+                    return text
+            except Exception:
+                # If .text fails, try to get parts manually
+                try:
+                    return response.candidates[0].content.parts[0].text
+                except Exception:
+                    pass
+
             return "I'm sorry, I couldn't generate a response. This might be due to safety filters."
         except Exception as e:
             error_msg = str(e)

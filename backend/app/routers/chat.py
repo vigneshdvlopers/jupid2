@@ -191,13 +191,19 @@ async def chat_with_ai(
     try:
         ai_response = await chatbot_service.get_response(request.message)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        ai_response = f"I'm sorry, I encountered an error while communicating with the AI: {str(e)}"
 
-    # Persist both messages
-    db.add(ChatHistory(user_id=current_user.id, session_id=session.id,
-                       role="user", content=request.message))
-    db.add(ChatHistory(user_id=current_user.id, session_id=session.id,
-                       role="assistant", content=ai_response))
-    await db.commit()
+    # Persist messages
+    try:
+        db.add(ChatHistory(user_id=current_user.id, session_id=session.id,
+                           role="user", content=request.message))
+        db.add(ChatHistory(user_id=current_user.id, session_id=session.id,
+                           role="assistant", content=ai_response))
+        await db.commit()
+    except Exception as e:
+        print(f"Database Error: {str(e)}")
+        # We don't raise here so the user at least gets the AI response
+        # even if it's not saved in history.
+        pass
 
     return ChatResponse(response=ai_response, session_id=session.id)
