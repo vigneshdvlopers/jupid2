@@ -160,12 +160,13 @@ export default function ChatPage() {
       loadSessions();
     } catch (err: any) {
       console.error('Chat error:', err);
+      const status = err.response?.status;
       const backendError = err.response?.data?.detail;
       const errMsg: Message = {
         role: 'assistant',
         content: backendError 
-          ? `Error: ${backendError}`
-          : 'Sorry, I encountered an error processing your request. Please check your internet connection or try again later.',
+          ? `Error (${status}): ${backendError}`
+          : `Error: ${status || 'Network Error/CORS'}. Please check if the backend is running and CORS is allowed.`,
       };
       setMessages(prev => [...prev, errMsg]);
     } finally {

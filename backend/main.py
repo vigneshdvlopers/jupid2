@@ -57,24 +57,7 @@ app.include_router(chat.router)
 
 @app.get("/")
 async def root():
-    gemini_status = "Not checked"
-    try:
-        from app.services.chatbot import chatbot_service
-        # Simple test message
-        test_resp = await chatbot_service.get_response("Ping")
-        if "Error" in test_resp:
-            gemini_status = f"Error: {test_resp}"
-        else:
-            gemini_status = "Healthy 🟢"
-    except Exception as e:
-        gemini_status = f"Failed: {str(e)}"
-        
-    return {
-        "status": "success", 
-        "message": "Jupid AI Backend is working successfully 🚀",
-        "gemini_api": gemini_status,
-        "frontend_url": os.getenv("FRONTEND_URL", "Not set")
-    }
+    return {"status": "success", "message": "Jupid AI Backend is working successfully 🚀"}
 
 @app.on_event("startup")
 async def startup_event():
