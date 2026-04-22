@@ -22,30 +22,28 @@ app = FastAPI(title="Jupid AI Backend")
 # Add ProxyHeadersMiddleware to handle HTTPS correctly behind Render proxy
 app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
 
-@app.middleware("http")
-async def log_origin(request: Request, call_next):
-    origin = request.headers.get("origin")
-    if origin:
-        logger.info(f"Incoming Request Origin: {origin}")
-    response = await call_next(request)
-    return response
+from fastapi.responses import Response
 
-frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000").rstrip("/")
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "https://jupid2.onrender.com",
-        "https://jupid2.vercel.app",
-        "https://jupid-frontend.vercel.app",
-        "http://localhost:3000",
-        "http://localhost:3001",
-        frontend_url,
-    ],
-    allow_origin_regex=r"https://.*\.vercel\.app",
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+@app.middleware("http")
+async def custom_cors_middleware(request: Request, call_next):
+    # Handle preflight OPTIONS requests
+    if request.method == "OPTIONS":
+        response = Response()
+        origin = request.headers.get("Origin", "*")
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Access-Control-Allow-Methods"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "*"
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        return response
+
+    response = await call_next(request)
+    origin = request.headers.get("Origin")
+    if origin:
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        response.headers["Access-Control-Allow-Methods"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "*"
+    return response
 
 app.add_middleware(
     SessionMiddleware, 
