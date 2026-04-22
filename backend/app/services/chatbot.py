@@ -28,7 +28,7 @@ class ChatbotService:
 
         try:
             model = genai.GenerativeModel(
-                model_name="gemini-1.5-flash",
+                model_name="gemini-2.0-flash",
                 system_instruction=self._system_instruction()
             )
             # Use the async version of generate_content
