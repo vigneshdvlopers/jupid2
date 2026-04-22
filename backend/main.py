@@ -28,23 +28,30 @@ from fastapi.responses import Response
 
 @app.middleware("http")
 async def custom_cors_middleware(request: Request, call_next):
+    origin = request.headers.get("Origin")
+    
     # Handle preflight OPTIONS requests
     if request.method == "OPTIONS":
         response = Response()
-        origin = request.headers.get("Origin", "*")
-        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Access-Control-Allow-Origin"] = origin or "*"
         response.headers["Access-Control-Allow-Methods"] = "*"
         response.headers["Access-Control-Allow-Headers"] = "*"
         response.headers["Access-Control-Allow-Credentials"] = "true"
         return response
 
-    response = await call_next(request)
-    origin = request.headers.get("Origin")
+    try:
+        response = await call_next(request)
+    except Exception as e:
+        logger.error(f"Middleware caught error: {str(e)}")
+        # If it crashes completely, return a basic response with CORS headers
+        response = Response(content=f"Internal Server Error: {str(e)}", status_code=500)
+
     if origin:
         response.headers["Access-Control-Allow-Origin"] = origin
         response.headers["Access-Control-Allow-Credentials"] = "true"
         response.headers["Access-Control-Allow-Methods"] = "*"
         response.headers["Access-Control-Allow-Headers"] = "*"
+    
     return response
 
 app.add_middleware(
