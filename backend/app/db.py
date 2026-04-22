@@ -9,6 +9,7 @@ DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql+asyncpg://jupid_user:F
 
 # Robust fix for SQLAlchemy 2.0+ async dialects
 if DATABASE_URL:
+    original_url = DATABASE_URL
     if DATABASE_URL.startswith("postgresq+asyncpg://"):
         DATABASE_URL = DATABASE_URL.replace("postgresq+asyncpg://", "postgresql+asyncpg://", 1)
     elif DATABASE_URL.startswith("postgres+asyncpg://"):
@@ -17,6 +18,13 @@ if DATABASE_URL:
         DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+asyncpg://", 1)
     elif DATABASE_URL.startswith("postgresql://"):
         DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
+    
+    # Mask password for logging
+    try:
+        masked_url = DATABASE_URL.split("@")[-1] if "@" in DATABASE_URL else DATABASE_URL
+        print(f"DB DEBUG: Using URL host: {masked_url}")
+    except:
+        pass
 
 engine = create_async_engine(DATABASE_URL, echo=False)
 AsyncSessionLocal = sessionmaker(

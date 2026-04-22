@@ -10,6 +10,8 @@ logger = logging.getLogger(__name__)
 
 load_dotenv()
 logger.info(f"MAIN DEBUG: GOOGLE_CLIENT_ID length: {len(os.getenv('GOOGLE_CLIENT_ID', ''))}")
+logger.info(f"MAIN DEBUG: DATABASE_URL length: {len(os.getenv('DATABASE_URL', ''))}")
+logger.info(f"MAIN DEBUG: All Env Keys: {list(os.environ.keys())}")
 
 from app.routers import auth, competitors, messages, clients, notifications, reports, chat
 from app.services.scheduler import setup_scheduler
