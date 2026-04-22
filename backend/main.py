@@ -1,6 +1,6 @@
 import os
 import logging
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
@@ -22,17 +22,26 @@ app = FastAPI(title="Jupid AI Backend")
 # Add ProxyHeadersMiddleware to handle HTTPS correctly behind Render proxy
 app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
 
-frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
+@app.middleware("http")
+async def log_origin(request: Request, call_next):
+    origin = request.headers.get("origin")
+    if origin:
+        logger.info(f"Incoming Request Origin: {origin}")
+    response = await call_next(request)
+    return response
+
+frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000").rstrip("/")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://jupid2.onrender.com",
         "https://jupid2.vercel.app",
+        "https://jupid-frontend.vercel.app",
         "http://localhost:3000",
         "http://localhost:3001",
         frontend_url,
     ],
-    allow_origin_regex=r"https://jupid2-.*\.vercel\.app",
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
