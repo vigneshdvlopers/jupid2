@@ -26,13 +26,13 @@ frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        frontend_url,
-        f"{frontend_url}/",
-        "https://jupid2-mk5oty9m2-shelkevignesh1234-2587s-projects.vercel.app",
+        "https://jupid2.onrender.com",
         "https://jupid2.vercel.app",
         "http://localhost:3000",
-        "http://localhost:3000/",
+        "http://localhost:3001",
+        frontend_url,
     ],
+    allow_origin_regex=r"https://jupid2-.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

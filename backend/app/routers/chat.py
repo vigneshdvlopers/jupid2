@@ -175,18 +175,23 @@ async def chat_with_ai(
 ):
     """Send a message. If no session_id, auto-uses today's session."""
     # Resolve session
-    if request.session_id:
-        result = await db.execute(
-            select(ChatSession).where(
-                and_(ChatSession.id == request.session_id,
-                     ChatSession.user_id == current_user.id)
+    try:
+        if request.session_id:
+            result = await db.execute(
+                select(ChatSession).where(
+                    and_(ChatSession.id == request.session_id,
+                         ChatSession.user_id == current_user.id)
+                )
             )
-        )
-        session = result.scalar_one_or_none()
-        if not session:
-            raise HTTPException(status_code=404, detail="Session not found")
-    else:
-        session = await get_or_create_today_session(current_user.id, db)
+            session = result.scalar_one_or_none()
+            if not session:
+                raise HTTPException(status_code=404, detail="Session not found")
+        else:
+            session = await get_or_create_today_session(current_user.id, db)
+    except Exception as e:
+        print(f"Chat Session Error: {str(e)}")
+        # If we can't get a session, we can't save history, but we should still try to answer
+        session = None
 
     try:
         ai_response = await chatbot_service.get_response(request.message)
@@ -195,9 +200,10 @@ async def chat_with_ai(
 
     # Persist messages
     try:
-        db.add(ChatHistory(user_id=current_user.id, session_id=session.id,
+        session_id = session.id if session else None
+        db.add(ChatHistory(user_id=current_user.id, session_id=session_id,
                            role="user", content=request.message))
-        db.add(ChatHistory(user_id=current_user.id, session_id=session.id,
+        db.add(ChatHistory(user_id=current_user.id, session_id=session_id,
                            role="assistant", content=ai_response))
         await db.commit()
     except Exception as e:
@@ -206,4 +212,5 @@ async def chat_with_ai(
         # even if it's not saved in history.
         pass
 
-    return ChatResponse(response=ai_response, session_id=session.id)
+    resp_session_id = session.id if session else 0
+    return ChatResponse(response=ai_response, session_id=resp_session_id)
