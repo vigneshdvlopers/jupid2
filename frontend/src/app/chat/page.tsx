@@ -158,10 +158,14 @@ export default function ChatPage() {
       setMessages(prev => [...prev, aiMsg]);
       // Refresh session list so counts update
       loadSessions();
-    } catch {
+    } catch (err: any) {
+      console.error('Chat error:', err);
+      const backendError = err.response?.data?.detail;
       const errMsg: Message = {
         role: 'assistant',
-        content: 'Sorry, I encountered an error processing your request.',
+        content: backendError 
+          ? `Error: ${backendError}`
+          : 'Sorry, I encountered an error processing your request. Please check your internet connection or try again later.',
       };
       setMessages(prev => [...prev, errMsg]);
     } finally {
