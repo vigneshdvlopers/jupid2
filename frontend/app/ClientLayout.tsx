@@ -23,10 +23,9 @@ export default function ClientLayout({
             ☰
           </button>
           <div className="flex items-center space-x-4">
-            <span className="text-sm text-gray-500">Welcome, Senior Engineer</span>
-            <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
-              SE
-            </div>
+            <button className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 transition-colors">
+              Contact Developer
+            </button>
           </div>
         </header>
         
