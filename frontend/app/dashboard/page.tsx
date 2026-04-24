@@ -7,14 +7,11 @@ import Button from '../components/Button';
 
 interface AnalysisResult {
   company: string;
-  competitors: string[];
   positioning: string;
   strengths: string[];
   weaknesses: string[];
-  comparison: string;
-  opportunities: string[];
-  threats: string[];
   strategy: string;
+  competitors: string[];
 }
 
 export default function Dashboard() {
@@ -42,7 +39,6 @@ export default function Dashboard() {
       
       const data = await response.json();
       setResult(data);
-      // Save for competitors page
       localStorage.setItem('last_analysis', JSON.stringify(data));
     } catch (err: any) {
       setError(err.message);
@@ -52,81 +48,62 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-end space-y-4 md:space-y-0 md:space-x-4">
-        <div className="flex-1">
-          <Input 
-            label="Enter IT/SaaS Company Name"
-            placeholder="e.g. Notion, Slack, Zoom..."
-            value={company}
-            onChange={(e) => setCompany(e.target.value)}
-          />
+    <div className="max-w-4xl mx-auto space-y-8">
+      <div className="bg-white p-6 rounded-lg border border-border shadow-sm">
+        <h1 className="text-xl font-bold mb-4">Competitor Analysis</h1>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex-1">
+            <Input 
+              placeholder="Enter company name (e.g. Notion)"
+              value={company}
+              onChange={(e) => setCompany(e.target.value)}
+            />
+          </div>
+          <Button onClick={handleAnalyze} loading={loading} className="whitespace-nowrap">
+            Analyze
+          </Button>
         </div>
-        <Button onClick={handleAnalyze} loading={loading}>
-          Generate Analysis
-        </Button>
       </div>
 
       {error && (
-        <div className="p-4 bg-red-50 border border-red-200 text-red-600 rounded-md">
+        <div className="p-4 bg-red-50 border border-red-200 text-red-600 rounded">
           {error}
         </div>
       )}
 
       {result && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <Card title="Market Positioning" className="md:col-span-2">
-            <p className="text-gray-700 leading-relaxed">{result.positioning}</p>
+        <div className="space-y-6">
+          <Card title="Market Positioning">
+            <p className="text-secondary leading-relaxed">{result.positioning}</p>
           </Card>
 
-          <Card title="Strengths">
-            <ul className="list-disc list-inside space-y-2 text-gray-700">
-              {result.strengths.map((s, i) => (
-                <li key={i}>{s}</li>
-              ))}
-            </ul>
-          </Card>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card title="Strengths">
+              <ul className="list-disc list-inside space-y-2 text-secondary">
+                {result.strengths.map((s, i) => (
+                  <li key={i}>{s}</li>
+                ))}
+              </ul>
+            </Card>
 
-          <Card title="Weaknesses">
-            <ul className="list-disc list-inside space-y-2 text-gray-700">
-              {result.weaknesses.map((w, i) => (
-                <li key={i}>{w}</li>
-              ))}
-            </ul>
-          </Card>
+            <Card title="Weaknesses">
+              <ul className="list-disc list-inside space-y-2 text-secondary">
+                {result.weaknesses.map((w, i) => (
+                  <li key={i}>{w}</li>
+                ))}
+              </ul>
+            </Card>
+          </div>
 
-          <Card title="Strategic Comparison" className="md:col-span-2">
-            <p className="text-gray-700 leading-relaxed">{result.comparison}</p>
-          </Card>
-
-          <Card title="Opportunities">
-            <ul className="list-disc list-inside space-y-2 text-gray-700">
-              {result.opportunities.map((o, i) => (
-                <li key={i}>{o}</li>
-              ))}
-            </ul>
-          </Card>
-
-          <Card title="Threats">
-            <ul className="list-disc list-inside space-y-2 text-gray-700">
-              {result.threats.map((t, i) => (
-                <li key={i}>{t}</li>
-              ))}
-            </ul>
-          </Card>
-
-          <Card title="Recommended Strategy" className="md:col-span-2 bg-blue-50 border-blue-100">
-            <p className="text-gray-800 font-medium leading-relaxed italic">
-              "{result.strategy}"
-            </p>
+          <Card title="Strategy">
+            <p className="text-secondary leading-relaxed">{result.strategy}</p>
           </Card>
         </div>
       )}
 
       {!result && !loading && (
-        <div className="h-64 flex flex-col items-center justify-center text-gray-400 border-2 border-dashed border-gray-200 rounded-lg">
-          <span className="text-4xl mb-2">🔍</span>
-          <p>No analysis generated yet. Enter a company name to start.</p>
+        <div className="text-center py-20 text-secondary border-2 border-dashed border-border rounded-lg bg-white">
+          <p>Enter a company name above to generate an AI analysis.</p>
         </div>
       )}
     </div>

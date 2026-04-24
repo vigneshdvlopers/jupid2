@@ -17,35 +17,26 @@ export default function Competitors() {
   }, []);
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800">Identified Competitors</h1>
+        <h1 className="text-xl font-bold">Identified Competitors</h1>
         {company && (
-          <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
-            For {company}
+          <span className="text-sm text-secondary">
+            Analysis for: <strong>{company}</strong>
           </span>
         )}
       </div>
 
       {competitors.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {competitors.map((name, index) => (
-            <Card key={index} className="hover:border-blue-300 transition-colors cursor-default">
-              <div className="flex items-center space-x-4">
-                <div className="h-10 w-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 font-bold">
-                  {name.charAt(0)}
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-800">{name}</h3>
-                  <p className="text-xs text-gray-500">Market Competitor</p>
-                </div>
-              </div>
+            <Card key={index} className="p-4">
+              <div className="font-medium text-foreground">{name}</div>
             </Card>
           ))}
         </div>
       ) : (
-        <div className="h-64 flex flex-col items-center justify-center text-gray-400 border-2 border-dashed border-gray-200 rounded-lg">
-          <span className="text-4xl mb-2">👥</span>
+        <div className="text-center py-20 text-secondary border-2 border-dashed border-border rounded-lg bg-white">
           <p>No competitors found. Run an analysis on the Dashboard first.</p>
         </div>
       )}
