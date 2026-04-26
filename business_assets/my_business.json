@@ -1,0 +1,20 @@
+{
+  "business_name": "Your Business Name",
+  "domain": "yourdomain.com",
+  "industry": "Software/SaaS",
+  "target_audience": "Small to Medium Businesses",
+  "core_products": [
+    {
+      "name": "Product A",
+      "description": "Short description of product A",
+      "pricing": "$99/mo"
+    }
+  ],
+  "key_selling_points": [
+    "Feature 1",
+    "Feature 2"
+  ],
+  "current_challenges": [
+    "Challenge 1"
+  ]
+}

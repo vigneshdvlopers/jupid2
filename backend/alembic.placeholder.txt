@@ -1,0 +1,2 @@
+# Generated Alembic env — run: alembic init migrations
+# Then configure alembic.ini to use your DATABASE_URL

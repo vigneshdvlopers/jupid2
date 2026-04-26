@@ -1,0 +1,27 @@
+[
+  {
+    "competitor_name": "Competitor X",
+    "domain": "competitorx.com",
+    "strengths": [
+      "Large market share",
+      "Robust feature set"
+    ],
+    "weaknesses": [
+      "High pricing",
+      "Slow customer support"
+    ],
+    "market_position": "Market Leader"
+  },
+  {
+    "competitor_name": "Competitor Y",
+    "domain": "competitory.com",
+    "strengths": [
+      "Aggressive pricing",
+      "Modern UI"
+    ],
+    "weaknesses": [
+      "Limited enterprise features"
+    ],
+    "market_position": "Challenger"
+  }
+]
