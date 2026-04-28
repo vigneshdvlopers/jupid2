@@ -46,6 +46,45 @@ export default function SEOPage() {
     }
   };
 
+  const handleExportMarkdown = () => {
+    if (!result) return;
+    
+    const { domain, insight } = result;
+    const date = new Date().toISOString().split('T')[0];
+    
+    const content = `# SEO Analysis Report: ${domain}
+Date: ${date}
+
+## Executive Summary
+${insight.executive_summary}
+
+## Key Insights
+${insight.key_insights.map(i => `- ${i}`).join('\n')}
+
+## Critical Issues
+${insight.critical_issues.map(i => `- ${i}`).join('\n')}
+
+## Opportunities
+${insight.opportunities.map(i => `- ${i}`).join('\n')}
+
+## Recommended Actions
+${insight.recommended_actions.map((a, i) => `${i + 1}. ${a}`).join('\n')}
+
+## Confidence Level
+${insight.confidence_level}
+`;
+
+    const blob = new Blob([content], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `jupid_seo_report_${domain}_${date}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="animate-in">
       <div className="page-header">
@@ -87,9 +126,31 @@ export default function SEOPage() {
               <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '4px' }}>Analysis for</p>
               <p style={{ fontFamily: 'Outfit,sans-serif', fontSize: '20px', fontWeight: 700, color: 'var(--text-primary)' }}>{result.domain}</p>
             </div>
-            <span className={`confidence-badge ${confidenceColor[result.insight.confidence_level] || 'badge-info'}`}>
-              ● {result.insight.confidence_level} Confidence
-            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <button 
+                onClick={handleExportMarkdown}
+                style={{
+                  background: 'rgba(99,102,241,0.1)',
+                  color: 'var(--accent)',
+                  border: '1px solid rgba(99,102,241,0.2)',
+                  padding: '6px 14px',
+                  borderRadius: '6px',
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.background = 'rgba(99,102,241,0.2)'}
+                onMouseOut={(e) => e.currentTarget.style.background = 'rgba(99,102,241,0.1)'}
+              >
+                <span>↓</span> Export Report
+              </button>
+              <span className={`confidence-badge ${confidenceColor[result.insight.confidence_level] || 'badge-info'}`}>
+                ● {result.insight.confidence_level} Confidence
+              </span>
+            </div>
           </div>
 
           {/* Executive summary */}
